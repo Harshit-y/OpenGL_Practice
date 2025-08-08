@@ -7,6 +7,12 @@ project(MyOpenGLProject VERSION 1.0.0)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+# Set OpenGL Preference
+# GLVID (Recommended)
+set(OpenGL_GL_PREFERENCE GLVND)
+# LEGACY
+#set(OpenGL_GL_PREFERENCE LEGACY)
+
 # Find the OpenGL library on the system
 find_package(OpenGL REQUIRED)
 
