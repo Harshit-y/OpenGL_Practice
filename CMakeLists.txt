@@ -1,7 +1,7 @@
 # Specify the minimum required CMake version
 cmake_minimum_required(VERSION 3.10)
 # Set the project name and version
-project(MyOpenGLProject VERSION 1.0.0)
+project(OpenGL_Practice VERSION 1.0.0)
 
 # Set the C++ standard to C++17
 set(CMAKE_CXX_STANDARD 17)
@@ -28,19 +28,19 @@ target_include_directories(glad PUBLIC
 )
 
 # Create the executable for your main application
-add_executable(my-opengl-project
+add_executable(opengl-practice
     src/main.cpp
 )
 
 # Set include directories for your executable
-target_include_directories(my-opengl-project PRIVATE
+target_include_directories(opengl-practice PRIVATE
     include
     libs/glad/include
     external/glfw/include
 )
 
 # Link all the necessary libraries
-target_link_libraries(my-opengl-project PRIVATE
+target_link_libraries(opengl-practice PRIVATE
     glfw
     glad
     OpenGL::GL
