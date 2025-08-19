@@ -55,7 +55,7 @@ int main() {
         return -1;
     }
 
-    // Make the window as the current OpenGL Context
+    // Make the created window’s OpenGL context the current context (so OpenGL calls affect this window)
     glfwMakeContextCurrent(window);
 
     // Load OpenGL functions with GLAD
@@ -73,12 +73,13 @@ int main() {
     // Tells GLFW to call the function "framebuffer_size_callback" when ever widow resizes
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
+    // Step 1: Build and compile the shaders
 
     // Create Vertex Shader Object and get its refernce
     GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
     // Attach Vertex Shader source to the Vertex Shader Object
     glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
-    // Compile the Vertex Shader code into machine code
+    // Compile the Vertex Shader into GPU-usable form
     glCompileShader(vertexShader);
 
     // Same steps for Fragment Shader
@@ -102,7 +103,9 @@ int main() {
     glDeleteShader(vertexShader);
     glDeleteShader(fragmentShader);
 
-    // Cordinates of the vertices
+    // Step 2: Setup vertex data and configure vertex attributes
+
+    // Array storing 3D coordinates of the triangle’s vertices (x,y,z)
     GLfloat vertices[] = {
         -0.5f, -0.5f * float(sqrt(3)) / 3, 0.0f, // Lower left corner
 		0.5f, -0.5f * float(sqrt(3)) / 3, 0.0f, // Lower right corner
@@ -113,8 +116,10 @@ int main() {
     GLuint VAO, VBO;
 
     // Generating VAO and VBO
-    glGenVertexArrays(1, &VAO); // one element VAO
-    glGenBuffers(1, &VBO); // one element in VBO
+
+    // Generate one Vertex Array Object (VAO) and one Vertex Buffer Object (VBO)
+    glGenVertexArrays(1, &VAO);
+    glGenBuffers(1, &VBO);
 
     // Make the VAO the current Vertex Array Object
     glBindVertexArray(VAO);
@@ -122,20 +127,21 @@ int main() {
     // Bind the VBO specifing it's a GL_ARRAY_BUFFER
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
 
-    // Vertice data into VBO
+    // Copy vertex data from CPU memory into GPU memory (inside VBO)
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
-    // Attribute data for VAO for first index i.e VBO
+    // Define how vertex attribute 0 (aPos) should interpret the data in the bound VBO: 3 floats per vertex, tightly packed
     // Configure the Vertex Attribute so that OpenGL knows how to read the VBO
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
 
     // Enable the Vertex Attribute so that OpenGL knows to use it
     glEnableVertexAttribArray(0);
 
-    // Bind both the VAO and VBO so that we don't accidently modify them
+    // Unbind the VBO and VAO so we don’t accidentally modify them later
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
 
+    // Step 3: Render loop (draw frame repeatedly until window closes)
 
     // Main render loop
     while (!glfwWindowShouldClose(window)) {
@@ -144,11 +150,15 @@ int main() {
         // // Clear the frame buffer with a color
         // glClear(GL_COLOR_BUFFER_BIT);
         
+        // 1. Clear screen
+
         display(window, glfwGetTime());
         
-        
+        // 2. Use shader
         glUseProgram(shaderProgram);
+        // 3. Bind VAO
         glBindVertexArray(VAO);
+        // 4. Draw triangle
         glDrawArrays(GL_TRIANGLES, 0, 3);
 
         // Swap buffers and poll for events
