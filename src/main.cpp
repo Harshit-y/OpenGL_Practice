@@ -25,6 +25,7 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
     glViewport(0, 0, width, height);
 }
 
+// Background Color
 void display(GLFWwindow* window, double currentTime){
     float green = (sin(currentTime) / 2.0f) + 0.5f;
     float red = (cos(currentTime) / 2.0f) + 0.5f;
