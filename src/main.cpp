@@ -155,6 +155,12 @@ int main() {
         glfwPollEvents();
     }
 
+
+    // Delete all the objects we created
+    glDeleteBuffers(1, &VBO);
+    glDeleteVertexArrays(1, &VAO);
+    glDeleteProgram(shaderProgram);
+
     // Delete window before ending the program
 	glfwDestroyWindow(window);
 	// Terminate GLFW before ending the program
