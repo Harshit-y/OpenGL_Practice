@@ -46,8 +46,8 @@ int main() {
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-    glfwWindowHint(GLFW_RESIZABLE, GL_TRUE);  // allow resize
-    glfwWindowHint(GLFW_SAMPLES, 4);          // enable 4x MSAA
+    // glfwWindowHint(GLFW_RESIZABLE, GL_TRUE);  // allow resize
+    // glfwWindowHint(GLFW_SAMPLES, 4);          // enable 4x MSAA
 
     // Create a GLFW window
     GLFWwindow* window = glfwCreateWindow(800, 600, "OpenGL Project", NULL /*fullscreen*/, NULL);
@@ -68,7 +68,10 @@ int main() {
 
     // VSync ON
     glfwSwapInterval(1);
-    glEnable(GL_MULTISAMPLE);
+
+    // For MSAA
+    // glEnable(GL_MULTISAMPLE);
+
     // Set the viewport
     glViewport(0, 0, 800, 600);
     
