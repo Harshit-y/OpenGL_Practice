@@ -1,6 +1,6 @@
-# C++ OpenGL Template Project
+# C++ OpenGL Practice Project
 
-This repository provides a robust, multiplatform template for creating C++ applications with OpenGL. It is configured to use modern tools and best practices, making it easy to get started with graphics programming on Windows, macOS, and Linux.
+This repository is just me learning OpenGL.
 
 ## Features
 
