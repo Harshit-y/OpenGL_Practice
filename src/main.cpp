@@ -126,27 +126,27 @@ int main() {
 
 
     // Initializing reference to VAO, VBO and EBO
-    GLuint VAO, VBO, EBO;
+    GLuint VAO[1], VBO[1], EBO[1];
 
     // Generating VAO and VBO
 
     // Generate one Vertex Array Object (VAO), one Vertex Buffer Object (VBO) and one Element Buffer Object(EBO)
-    glGenVertexArrays(1, &VAO);
-    glGenBuffers(1, &VBO);
-    glGenBuffers(1, &EBO);
+    glGenVertexArrays(1, VAO);
+    glGenBuffers(1, VBO);
+    glGenBuffers(1, EBO);
 
 
     // Make the VAO the current Vertex Array Object
-    glBindVertexArray(VAO);
+    glBindVertexArray(*VAO);
     
     // Bind the VBO specifing it's a GL_ARRAY_BUFFER
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    glBindBuffer(GL_ARRAY_BUFFER, *VBO);
     
     // Copy vertex data from CPU memory into GPU memory (inside VBO)
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
     // Bind the EBO
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, *EBO);
 
     // Copy element data from CPU memory into GPU memory (inside VBO)
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
@@ -178,7 +178,7 @@ int main() {
         // 2. Use shader
         glUseProgram(shaderProgram);
         // 3. Bind VAO
-        glBindVertexArray(VAO);
+        glBindVertexArray(*VAO);
         // 4. Draw elements
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
@@ -189,8 +189,8 @@ int main() {
 
 
     // Delete all the objects we created
-    glDeleteBuffers(1, &VBO);
-    glDeleteVertexArrays(1, &VAO);
+    glDeleteBuffers(1, VBO);
+    glDeleteVertexArrays(1, VAO);
     glDeleteProgram(shaderProgram);
 
     // Delete window before ending the program
