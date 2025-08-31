@@ -30,6 +30,7 @@ target_include_directories(glad PUBLIC
 # Create the executable for your main application
 add_executable(opengl-practice
     src/main.cpp
+    include/shaderClass.cpp
 )
 
 # Set include directories for your executable
