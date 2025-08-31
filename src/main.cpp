@@ -169,6 +169,11 @@ int main() {
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
 
+    // Bind the EBO to 0 so that we don't accidentally modify it
+	// MAKE SURE TO UNBIND IT AFTER UNBINDING THE VAO, as the EBO is linked in the VAO
+	// This does not apply to the VBO because the VBO is already linked to the VAO during glVertexAttribPointer
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
     // Step 3: Render loop (draw frame repeatedly until window closes)
 
     // Main render loop
@@ -201,6 +206,7 @@ int main() {
 
     // Delete all the objects we created
     glDeleteBuffers(1, VBO);
+    glDeleteBuffers(1, EBO);
     glDeleteVertexArrays(1, VAO);
     glDeleteProgram(shaderProgram);
 
