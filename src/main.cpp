@@ -179,8 +179,11 @@ int main() {
         glUseProgram(shaderProgram);
         // 3. Bind VAO
         glBindVertexArray(*VAO);
+
+        glPolygonMode(GL_FRONT_AND_BACK,GL_LINE);
+
         // 4. Draw elements
-        glDrawElements(GL_LINE_LOOP, 6, GL_UNSIGNED_INT, 0);
+        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
         // Swap buffers and poll for events
         glfwSwapBuffers(window);
