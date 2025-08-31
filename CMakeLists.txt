@@ -46,3 +46,7 @@ target_link_libraries(opengl-practice PRIVATE
     glad
     OpenGL::GL
 )
+
+target_compile_definitions(opengl-practice PRIVATE
+    SHADER_DIR="${CMAKE_SOURCE_DIR}/shaders"
+)

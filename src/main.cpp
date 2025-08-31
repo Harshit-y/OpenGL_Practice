@@ -26,10 +26,12 @@ void display(GLFWwindow* window, double currentTime){
 
 int main() {
 
-    char cwd[1024];
-    if (getcwd(cwd, sizeof(cwd)) != nullptr) {
-        std::cout << "Working directory: " << cwd << std::endl;
-    }
+    // Prints Current Working Directory
+
+    // char cwd[1024];
+    // if (getcwd(cwd, sizeof(cwd)) != nullptr) {
+    //     std::cout << "Working directory: " << cwd << std::endl;
+    // }
 
     // Initialize GLFW
     if (!glfwInit()) {
@@ -74,6 +76,9 @@ int main() {
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
     // Step 1: Build and compile the shaders
+    // std::string vertPath = std::string(SHADER_DIR) + "/default.vert";
+    // std::string fragPath = std::string(SHADER_DIR) + "/default.frag";
+
 
     Shader shaderProgram("../shaders/default.vert", "../shaders/default.frag");
     
