@@ -31,6 +31,9 @@ target_include_directories(glad PUBLIC
 add_executable(opengl-practice
     src/main.cpp
     include/shaderClass.cpp
+    include/VBO.cpp
+    include/VAO.cpp
+    include/EBO.cpp
 )
 
 # Set include directories for your executable

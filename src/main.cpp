@@ -6,7 +6,10 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
-#include <shaderClass.h>
+#include "shaderClass.h"
+#include "VAO.h"
+#include "VBO.h"
+#include "EBO.h"
 
 
 // For dynamic resize of viewport
@@ -23,6 +26,26 @@ void display(GLFWwindow* window, double currentTime){
     glClearColor(red, green, blue, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
 }
+
+    // Array storing 3D coordinates of the triangle’s vertices (x,y,z)
+    // Vertices coordinates
+	GLfloat vertices[] =
+	{
+		-0.5f, -0.5f * float(sqrt(3)) / 3, 0.0f, // Lower left corner
+		0.5f, -0.5f * float(sqrt(3)) / 3, 0.0f, // Lower right corner
+		0.0f, 0.5f * float(sqrt(3)) * 2 / 3, 0.0f, // Upper corner
+		-0.5f / 2, 0.5f * float(sqrt(3)) / 6, 0.0f, // Inner left
+		0.5f / 2, 0.5f * float(sqrt(3)) / 6, 0.0f, // Inner right
+		0.0f, -0.5f * float(sqrt(3)) / 3, 0.0f // Inner down
+	};
+
+	// Indices for vertices order
+	GLuint indices[] =
+	{
+		0, 3, 5, // Lower left triangle
+		3, 2, 4, // Upper triangle
+		5, 4, 1 // Lower right triangle
+	};
 
 int main() {
 
@@ -83,73 +106,26 @@ int main() {
     Shader shaderProgram("../shaders/default.vert", "../shaders/default.frag");
     
     // Step 2: Setup vertex data and configure vertex attributes
+    // Shift to global
 
-    // Array storing 3D coordinates of the triangle’s vertices (x,y,z)
-    // Vertices coordinates
-	GLfloat vertices[] =
-	{
-		-0.5f, -0.5f * float(sqrt(3)) / 3, 0.0f, // Lower left corner
-		0.5f, -0.5f * float(sqrt(3)) / 3, 0.0f, // Lower right corner
-		0.0f, 0.5f * float(sqrt(3)) * 2 / 3, 0.0f, // Upper corner
-		-0.5f / 2, 0.5f * float(sqrt(3)) / 6, 0.0f, // Inner left
-		0.5f / 2, 0.5f * float(sqrt(3)) / 6, 0.0f, // Inner right
-		0.0f, -0.5f * float(sqrt(3)) / 3, 0.0f // Inner down
-	};
+    // Generates Vertex Array Object and binds it
+    VAO VAO1;
+    VAO1.Bind();
 
-	// Indices for vertices order
-	GLuint indices[] =
-	{
-		0, 3, 5, // Lower left triangle
-		3, 2, 4, // Upper triangle
-		5, 4, 1 // Lower right triangle
-	};
+    // Generates Vertex Array Object and links it to vertices
+    VBO VBO1(vertices,sizeof(vertices));
 
+    // Generates Element Buffer Object and links it to indices
+    EBO EBO1(indices, sizeof(indices));
 
+    //Links VBO to VAO
+    VAO1.LinkVBO(VBO1,0);
 
-    // Initializing reference to VAO, VBO and EBO
-    GLuint VAO[1], VBO[1], EBO[1];
-
-    // Generating VAO and VBO
-
-    // Generate one Vertex Array Object (VAO), one Vertex Buffer Object (VBO) and one Element Buffer Object(EBO)
-    glGenVertexArrays(1, VAO);
-    glGenBuffers(1, VBO);
-    glGenBuffers(1, EBO);
-
-
-    // Make the VAO the current Vertex Array Object
-    glBindVertexArray(*VAO);
+    //Unbind all to prevent accidental modification
+    VAO1.Unbind();
+    VBO1.Unbind();
+    EBO1.Unbind();
     
-    // Bind the VBO specifing it's a GL_ARRAY_BUFFER
-    glBindBuffer(GL_ARRAY_BUFFER, *VBO);
-    
-    // Copy vertex data from CPU memory into GPU memory (inside VBO)
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
-    // Bind the EBO
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, *EBO);
-
-    // Copy element data from CPU memory into GPU memory (inside VBO)
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
-
-    // Define how vertex attribute 0 (aPos) should interpret the data in the bound VBO: 3 floats per vertex, tightly packed
-    // Configure the Vertex Attribute so that OpenGL knows how to read the VBO
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (void*)0);
-
-    // Enable the Vertex Attribute so that OpenGL knows to use it
-    glEnableVertexAttribArray(0);
-
-    // Unbind the VBO and VAO so we don’t accidentally modify them later
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-    glBindVertexArray(0);
-
-    // Bind the EBO to 0 so that we don't accidentally modify it
-	// MAKE SURE TO UNBIND IT AFTER UNBINDING THE VAO, as the EBO is linked in the VAO
-	// This does not apply to the VBO because the VBO is already linked to the VAO during glVertexAttribPointer
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-
-    // Gets ID of uniform called "scale"
-	GLuint uniID = glGetUniformLocation(shaderProgram.ID, "scale");
 
     // Step 3: Render loop (draw frame repeatedly until window closes)
 
@@ -167,7 +143,7 @@ int main() {
         // 2. Use shader
         shaderProgram.Activate();
         // 3. Bind VAO
-        glBindVertexArray(*VAO);
+        VAO1.Bind();
 
         // Wireframe Mode
         // glPolygonMode(GL_FRONT_AND_BACK,GL_LINE);
@@ -182,9 +158,9 @@ int main() {
 
 
     // Delete all the objects we created
-    glDeleteBuffers(1, VBO);
-    glDeleteBuffers(1, EBO);
-    glDeleteVertexArrays(1, VAO);
+    VAO1.Delete();
+    VBO1.Delete();
+    EBO1.Delete();
     shaderProgram.Delete();
 
     // Delete window before ending the program
