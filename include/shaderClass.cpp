@@ -14,11 +14,8 @@ std::string get_file_contents(const char* filename)
 		in.close();
 		return(contents);
 	}
-	if (!in) {
-		std::cerr << "Failed to open: " << filename << std::endl;
-		throw(errno);
-	}
 	throw(errno);
+	
 }
 
 // Constructor that build the Shader Program from 2 different shaders
