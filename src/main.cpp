@@ -1,6 +1,5 @@
 #include <iostream>
 #include <cmath>
-#include <unistd.h>
 
 // IMPORTANT: GLAD headers MUST be included before GLFW headers.
 #include <glad/glad.h>
@@ -164,9 +163,9 @@ int main() {
 
 
     // Delete all the objects we created
-    VAO1.Delete();
-    VBO1.Delete();
     EBO1.Delete();
+    VBO1.Delete();
+    VAO1.Delete();
     shaderProgram.Delete();
 
     // Delete window before ending the program
